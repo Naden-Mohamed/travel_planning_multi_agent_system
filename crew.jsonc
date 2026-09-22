@@ -1,0 +1,117 @@
+{
+  "name": "travel-planning-multi-agent-system",
+
+  // Agents to include — each must have a matching agents/<name>.jsonc file
+  "agents": ["analyzes_input_destination", "budget_agent", "itinerary_planner", "senior_travel_advisor", "quality_assurance_reviewer"],
+
+  // Task definitions — executed in order for sequential process
+  "tasks": [
+    {
+      "name": "analyzes_input_destination_task",
+
+      "description": "Research the destination '{destination}' for a traveler interested in {interests}. Identify the most suitable places to visit and activities to do that match these interests specifically — avoid generic 'top 10 tourist spots' lists. Consider practicality for a trip of {days} days.",
+
+      "expected_output": "A structured list of 6-10 recommended places/activities in '{destination}', each with a one-line description of why it fits the traveler's interest in {interests}. Group them by category (e.g. Culture, Food, Nature, Nightlife) if relevant.",
+
+      "guardrail": "The answer must match the expected output format.",
+      "guardrail_max_retries": 2,
+
+      "output_file": "output/research_destination_output.md",
+
+      "agent": "analyzes_input_destination"
+    },
+    {
+      "name": "budget_task",
+
+      "description": "Using the destination research provided, estimate realistic costs for accommodation, food, local transportation, and activities in '{destination}' for a {days}-day trip. Compare the total estimate against the traveler's stated budget of {budget} and explicitly state whether the plan is likely to fit within budget, and by how much.",
+
+      "expected_output": "A cost breakdown table with rows: Accommodation, Food, Transportation, Activities, Total — each with a low-high estimate in the same currency as {budget}. End with a clear verdict: 'Within budget' or 'Over budget by approximately X', comparing the total to {budget}.",
+
+      "guardrails": [
+        "Every factual claim must be supported by context.",
+        "The answer must match the expected output format."
+      ],
+      "guardrail_max_retries": 2,
+
+      "context": ["analyzes_input_destination_task"],
+      "output_file": "output/budget_output.md",
+
+      "agent": "budget_agent"
+    },
+    {
+      "name": "itinerary_task",
+
+      "description": "Using the recommended places/activities and the budget breakdown, build a day-by-day itinerary for {days} days in '{destination}'. Sequence activities sensibly (e.g. by location/proximity or logical flow through the day) and make sure the schedule is realistic — don't overpack any single day.",
+
+      "expected_output": "A day-by-day schedule for all {days} days, formatted as: 'Day N: Morning – [activity], Afternoon – [activity], Evening – [activity]', drawing only from the previously recommended places.",
+
+      "guardrails": [
+        "Every factual claim must be supported by context.",
+        "The answer must match the expected output format."
+      ],
+      "guardrail_max_retries": 2,
+
+      "context": ["analyzes_input_destination_task", "budget_task"],
+      "output_file": "output/itinerary_planner_output.md",
+
+      "agent": "itinerary_planner"
+    },
+    {
+      "name": "recommendation_task",
+
+      "description": "Review the destination research, budget analysis, and itinerary together for the trip to '{destination}'. Resolve any inconsistencies between them, then write the final, polished travel plan the traveler will actually receive, ending with a short confident recommendation on whether this trip plan is a good fit for their budget of {budget} and interest in {interests}.",
+
+      "expected_output": "A final travel plan document with four clearly labeled sections: 'Recommended Places & Activities', 'Estimated Budget', 'Day-by-Day Itinerary', and 'Final Recommendations'. Written in a clear, client-facing tone.",
+
+      "guardrails": [
+        "Every factual claim must be supported by context.",
+        "The answer must match the expected output format."
+      ],
+      "guardrail_max_retries": 2,
+
+      "context": ["analyzes_input_destination_task", "budget_task", "itinerary_task"],
+      "output_file": "output/final_travel_plan.md",
+
+      "agent": "senior_travel_advisor"
+    },
+    {
+      "name": "evaluator_task",
+
+      "description": "Check the final travel plan for '{destination}' against the traveler's original constraints: budget of {budget}, interests in {interests}, and {days} available days. Flag any specific inconsistency — e.g. total cost exceeding budget, an itinerary day that doesn't fit the timeframe, or interests that were ignored.",
+
+      "expected_output": "A JSON object with keys: 'within_budget' (bool), 'matches_interests' (bool), 'fits_timeframe' (bool), and 'issues' (list of strings, empty if none found).",
+
+      "guardrails": [
+        "The answer must be valid JSON matching the expected schema."
+      ],
+      "guardrail_max_retries": 2,
+
+      "context": ["budget_task", "itinerary_task", "recommendation_task"],
+      "output_file": "output/evaluation_output.json",
+
+      "agent": "quality_assurance_reviewer"
+    }
+  ],
+
+  "process": "sequential",
+
+  "verbose": true,
+
+  "memory": true,
+
+  "max_rpm": 5,
+  "cache": true,
+  "output_log_file": "crew.log",
+  "tracing": true,
+
+  // Optional runtime input defaults.
+  // Use {placeholder} in agent or task text, for example:
+  // "description": "Research {topic} and write a brief"
+  // `crewai run` prompts for any placeholders missing from this object.
+  "inputs": {
+    "destination": "Cairo",
+    "interests": "Museums",
+    "budget": "150$",
+    "days": "15 days"
+  }
+}

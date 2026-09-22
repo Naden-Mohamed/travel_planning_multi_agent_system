@@ -1,0 +1,21 @@
+[project]
+name = "travel_planning_multi_agent_system"
+version = "0.1.0"
+description = "travel-planning-multi-agent-system using crewAI"
+authors = [{ name = "Naden", email = "nm1599481@gmail.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]>=1.15.22,<2.0.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["agents", "crew.jsonc", "tools", "knowledge", "skills"]
+
+[tool.crewai]
+type = "crew"
+definition = "crew.jsonc"
+project_id = "0b936bb6-4e2e-4631-a7aa-c0335391c7b4"
