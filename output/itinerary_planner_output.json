@@ -1,0 +1,32 @@
+{
+    "num_trip_days": 3,
+    "days_plan": [
+        {
+            "day_num": 1,
+            "day_title": "Historical Roots and Local Markets",
+            "schedule": {
+                "morning": "Begin your exploration with an authentic experience at the Mercat de l'Abaceria, shopping for fresh produce alongside the locals.",
+                "afternoon": "Visit the El Born Centre de Cultura i Memòria to walk through the fascinating ruins of 1700s Barcelona housed in an old market hall.",
+                "evening": "Conclude your first day by immersing yourself in the city's modernist architecture and Catalan spirit with a visit to the Palau de la Música Catalana."
+            }
+        },
+        {
+            "day_num": 2,
+            "day_title": "Coastal Connection and Mediterranean Views",
+            "schedule": {
+                "morning": "Take a small-group sailing tour from Port Vell to view Barcelona's unique skyline from the perspective of the Mediterranean Sea.",
+                "afternoon": "Enjoy a relaxing afternoon walking or cycling along the Passeig Marítim del Bogatell, favoring the quieter, local beach vibe.",
+                "evening": "Wind down by the coast, appreciating the city's intimate relationship with the water as the sun sets over the Mediterranean."
+            }
+        },
+        {
+            "day_num": 3,
+            "day_title": "Social Dining and Vibrant Streets",
+            "schedule": {
+                "morning": "Spend a leisurely morning revisiting your favorite neighborhood spots or exploring the charming streets near Poble-sec.",
+                "afternoon": "Continue soaking in the local atmosphere with a relaxed stroll through the city's hidden plazas and neighborhood markets.",
+                "evening": "End your trip with a vibrant and immersive dive into the social dining habits of Barcelonians with a pintxos crawl down the famous Carrer de Blai."
+            }
+        }
+    ]
+}

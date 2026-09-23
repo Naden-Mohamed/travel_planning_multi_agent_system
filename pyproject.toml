@@ -5,7 +5,7 @@ description = "travel-planning-multi-agent-system using crewAI"
 authors = [{ name = "Naden", email = "nm1599481@gmail.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "crewai[tools]>=1.15.22,<2.0.0"
+    "crewai[google-genai,litellm,tools]>=1.15.22,<2.0.0",
 ]
 
 [build-system]
